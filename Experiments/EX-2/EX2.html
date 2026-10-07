@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registration Form</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: white;
+            width: 100%;
+            padding: 30px 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 6px rgba(102, 126, 234, 0.4);
+        }
+
+        span {
+            display: block;
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #successMessage {
+            text-align: center;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            form {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Student Course Registration Form</h2>
+
+        <form id="registrationForm">
+
+            <label>Name:</label>
+            <input type="text" id="name">
+            <span id="nameError"></span>
+            <br><br>
+
+            <label>Email:</label>
+            <input type="text" id="email">
+            <span id="emailError"></span>
+            <br><br>
+
+            <label>Mobile Number:</label>
+            <input type="text" id="mobile">
+            <span id="mobileError"></span>
+            <br><br>
+
+            <label>Password:</label>
+            <input type="password" id="password">
+            <span id="passwordError"></span>
+            <br><br>
+
+            <label>Confirm Password:</label>
+            <input type="password" id="confirmPassword">
+            <span id="confirmPasswordError"></span>
+            <br><br>
+
+            <label>Age:</label>
+            <input type="number" id="age">
+            <span id="ageError"></span>
+            <br><br>
+
+            <label>Course:</label>
+            <select id="course">
+                <option value="">-- Select Course --</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="NodeJS">Node.js</option>
+                <option value="Python">Python</option>
+            </select>
+            <span id="courseError"></span>
+            <br><br>
+
+            <button type="submit">Register</button>
+
+        </form>
+
+        <p id="successMessage"></p>
+
+    </div>
+
+
+    <script>
+
+        document.getElementById("registrationForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+                let valid = true;
+
+                let name = document.getElementById("name").value.trim();
+                let email = document.getElementById("email").value.trim();
+                let mobile = document.getElementById("mobile").value.trim();
+                let password = document.getElementById("password").value;
+                let confirmPassword = document.getElementById("confirmPassword").value;
+                let age = document.getElementById("age").value;
+                let course = document.getElementById("course").value;
+
+
+                // Clear errors
+
+                document.getElementById("nameError").textContent = "";
+                document.getElementById("emailError").textContent = "";
+                document.getElementById("mobileError").textContent = "";
+                document.getElementById("passwordError").textContent = "";
+                document.getElementById("confirmPasswordError").textContent = "";
+                document.getElementById("ageError").textContent = "";
+                document.getElementById("courseError").textContent = "";
+                document.getElementById("successMessage").textContent = "";
+
+
+                // Name validation
+
+                if (name === "") {
+
+                    document.getElementById("nameError").textContent =
+                        "Name is required.";
+
+                    valid = false;
+
+                } else if (name.length < 3) {
+
+                    document.getElementById("nameError").textContent =
+                        "Name must contain at least 3 characters.";
+
+                    valid = false;
+                }
+
+
+                // Email validation
+
+                let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (email === "") {
+
+                    document.getElementById("emailError").textContent =
+                        "Email is required.";
+
+                    valid = false;
+
+                } else if (!emailPattern.test(email)) {
+
+                    document.getElementById("emailError").textContent =
+                        "Enter a valid email address.";
+
+                    valid = false;
+                }
+
+
+                // Mobile validation
+
+                let mobilePattern = /^[0-9]{10}$/;
+
+                if (!mobilePattern.test(mobile)) {
+
+                    document.getElementById("mobileError").textContent =
+                        "Mobile number must contain exactly 10 digits.";
+
+                    valid = false;
+                }
+
+
+                // Password validation
+
+                if (password.length < 6) {
+
+                    document.getElementById("passwordError").textContent =
+                        "Password must contain at least 6 characters.";
+
+                    valid = false;
+                }
+
+
+                // Confirm password
+
+                if (password !== confirmPassword) {
+
+                    document.getElementById("confirmPasswordError").textContent =
+                        "Passwords do not match.";
+
+                    valid = false;
+                }
+
+
+                // Age validation
+
+                if (age === "") {
+
+                    document.getElementById("ageError").textContent =
+                        "Age is required.";
+
+                    valid = false;
+
+                } else if (age < 18 || age > 60) {
+
+                    document.getElementById("ageError").textContent =
+                        "Age must be between 18 and 60.";
+
+                    valid = false;
+                }
+
+
+                // Course validation
+
+                if (course === "") {
+
+                    document.getElementById("courseError").textContent =
+                        "Please select a course.";
+
+                    valid = false;
+                }
+
+
+                // Final result
+
+                if (valid) {
+
+                    document.getElementById("successMessage").textContent =
+                        "Registration successful!";
+
+                    document.getElementById("registrationForm").reset();
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>

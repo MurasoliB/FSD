@@ -1,0 +1,70 @@
+#Profile{
+    align-items:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+
+}
+
+#headerProfile{
+text-align:center;
+background-color:aqua;
+}
+
+table,th,td{
+    border:2px solid rgb(214, 45, 45);
+}
+
+#navbar{
+    list-style: none;
+    margin: 0;
+    padding: 25px ;
+
+    display: flex;          
+    justify-content: center;
+    align-items: center;
+    gap: 2000px;              
+}
+
+#navbar li{
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#navbar a{
+    text-decoration: none;
+    color: rgb(152, 0, 0);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#navbar a:hover{
+    color: #00bcd4;
+}
+
+#TechnicalSkills{
+    text-align:center;
+
+}
+#TechnicalSkills ul{
+    display:inline-block;
+    text-align: left;
+}
+#Education{
+    text-align:center;
+}
+#Education table{
+    margin:0 auto;
+}
+#Projects{
+    text-align:center;
+}
+#Projects ul{
+    display:inline-block;
+}
+#Contact{
+    text-align:center;
+}
+
+

@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+
+/* Navigation */
+
+nav a {
+    text-decoration: none;
+}
+
+
+/* Section headings */
+
+h2 {
+    margin-bottom: 25px;
+}
+
+
+/* About */
+
+#about {
+    max-width: 800px;
+}
+
+
+/* Skills */
+
+#skills li {
+    margin: 10px;
+}
+
+
+/* Projects */
+
+#projects li {
+    margin: 10px;
+    list-style-type: none;
+}
+
+#projects{
+    text-align: center;
+
+    
+}
+
+/* Contact */
+
+#contact a {
+    text-decoration: none;
+}
