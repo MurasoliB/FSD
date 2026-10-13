@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5fa;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #263b70;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #ccc;
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background: #2855c5;
+            margin: 3px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .delete {
+            background: #dc3545;
+        }
+
+        .edit {
+            background: #198754;
+        }
+
+        .cancel {
+            background: #6c757d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #263b70;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f5fa;
+        }
+
+        #message {
+            color: #198754;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Product Management System</h1>
+
+    <h2 id="formTitle">Add New Product</h2>
+
+    <form id="productForm">
+        <input type="hidden" id="productId">
+
+        <label>Product Name:</label>
+        <input type="text" id="name" required
+               placeholder="Enter product name">
+
+        <label>Price (₹):</label>
+        <input type="number" id="price" min="0"
+               step="0.01" required placeholder="Enter price">
+
+        <label>Quantity:</label>
+        <input type="number" id="quantity" min="0"
+               step="1" required placeholder="Enter quantity">
+
+        <label>Category:</label>
+        <input type="text" id="category" required
+               placeholder="Enter category">
+
+        <button type="submit" id="submitBtn">
+            Add Product
+        </button>
+
+        <button type="button" class="cancel"
+                id="cancelBtn" hidden onclick="resetForm()">
+            Cancel
+        </button>
+    </form>
+
+    <p id="message"></p>
+
+    <h2>Product List</h2>
+
+    <button onclick="loadProducts()">Refresh Products</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="productTable"></tbody>
+    </table>
+</div>
+
+<script>
+    const form = document.getElementById('productForm');
+    const table = document.getElementById('productTable');
+    const message = document.getElementById('message');
+
+    // Display a message
+    function showMessage(text) {
+        message.textContent = text;
+    }
+
+    // CREATE and UPDATE
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('productId').value;
+
+        const product = {
+            name: document.getElementById('name').value,
+            price: Number(document.getElementById('price').value),
+            quantity: Number(document.getElementById('quantity').value),
+            category: document.getElementById('category').value
+        };
+
+        const url = id ? `/products/${id}` : '/products';
+        const method = id ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || result.message);
+            }
+
+            showMessage(result.message);
+            resetForm();
+            loadProducts();
+
+        } catch (error) {
+            showMessage('Error: ' + error.message);
+        }
+    });
+
+    // READ - Display all products
+    async function loadProducts() {
+        try {
+            const response = await fetch('/products');
+            const products = await response.json();
+
+            table.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+
+                // Use textContent to display database values safely
+                [
+                    product.name,
+                    '₹' + product.price,
+                    product.quantity,
+                    product.category
+                ].forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                const actions = document.createElement('td');
+
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Edit';
+                editBtn.className = 'edit';
+                editBtn.onclick = () => editProduct(product._id);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'delete';
+                deleteBtn.onclick = () => deleteProduct(product._id);
+
+                actions.append(editBtn, deleteBtn);
+                row.appendChild(actions);
+                table.appendChild(row);
+            });
+
+        } catch (error) {
+            showMessage('Unable to load products.');
+        }
+    }
+
+    // Load a product into the form for editing
+    async function editProduct(id) {
+        try {
+            const response = await fetch(`/products/${id}`);
+            const product = await response.json();
+
+            if (!response.ok) {
+                throw new Error(product.message);
+            }
+
+            document.getElementById('productId').value = product._id;
+            document.getElementById('name').value = product.name;
+            document.getElementById('price').value = product.price;
+            document.getElementById('quantity').value = product.quantity;
+            document.getElementById('category').value = product.category;
+
+            document.getElementById('formTitle').textContent =
+                'Update Product';
+
+            document.getElementById('submitBtn').textContent =
+                'Update Product';
+
+            document.getElementById('cancelBtn').hidden = false;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (error) {
+            showMessage('Unable to load product.');
+        }
+    }
+
+    // DELETE - Remove a product
+    async function deleteProduct(id) {
+        if (!confirm('Are you sure you want to delete this product?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/products/${id}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || result.error);
+            }
+
+            showMessage(result.message);
+            loadProducts();
+
+        } catch (error) {
+            showMessage('Error: ' + error.message);
+        }
+    }
+
+    // Reset the form
+    function resetForm() {
+        form.reset();
+
+        document.getElementById('productId').value = '';
+        document.getElementById('formTitle').textContent =
+            'Add New Product';
+
+        document.getElementById('submitBtn').textContent =
+            'Add Product';
+
+        document.getElementById('cancelBtn').hidden = true;
+    }
+
+    // Display products when the page opens
+    loadProducts();
+</script>
+
+</body>
+</html>
