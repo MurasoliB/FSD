@@ -1,11 +1,13 @@
+import profileImage from "../assets/Murasoli.png";
+
 const profileData = {
-  name: "Arun Kumar",
+  name: "Murasoli B",
   role: "Frontend Developer",
-  email: "arun@example.com",
-  phone: "+91 9876543210",
-  location: "Madurai, Tamil Nadu",
+  email: "balajimurasoli@gmail.com",
+  phone: "+91 934290803",
+  location: "Tiruvannamalai, Tamil Nadu",
   about: "I am a passionate React developer who enjoys building responsive web applications.",
-  image: "https://i.pravatar.cc/300?img=12"
+  image: profileImage,
 };
 
 export default profileData;
